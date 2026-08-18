@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timezone Converter</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Luxon library for timezone calculations -->
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+</head>
+<body>
+  <main class="card">
+    <h1>Timezone Converter</h1>
+    <p class="subtitle">Convert timestamps to your local time automatically!</p>
+
+    <div class="input-group">
+      <label for="time-input">Enter Timestamp & Timezone</label>
+      <input 
+        type="text" 
+        id="time-input" 
+        placeholder="e.g. 9:30 PM PT"
+        autocomplete="off"
+        autofocus
+      />
+    </div>
+
+    <div id="result-container" class="result-container">
+      <span class="label">Local Time</span>
+      <div id="converted-time" class="large-time">--:--</div>
+      <div id="converted-details" class="details-text">Enter a timestamp above</div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
