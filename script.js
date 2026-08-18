@@ -29,15 +29,32 @@ const TIMEZONE_MAP = {
 };
 
 const inputEl = document.getElementById('time-input');
+const pasteBtn = document.getElementById('paste-btn');
 const timeDisplay = document.getElementById('converted-time');
 const detailsDisplay = document.getElementById('converted-details');
 
 inputEl.addEventListener('input', processInput);
 
+// On paste button click
+pasteBtn.addEventListener('click', async () => {
+  try {
+    // Read text from clipboard
+    const text = await navigator.clipboard.readText();
+    // Set input value to clipboard text
+    inputEl.value = text;
+    // Trigger the conversion manually since setting value via JS doesn't fire 'input' event
+    processInput();
+  } catch (err) {
+    detailsDisplay.textContent = 'Clipboard access denied or failed.';
+    detailsDisplay.classList.add('error');
+    console.error('Failed to read clipboard: ', err);
+  }
+});
+
 function processInput() {
   const val = inputEl.value.trim();
   
-  if (!val) {
+  if (!val) { // No value
     timeDisplay.textContent = '--:--';
     detailsDisplay.textContent = 'Enter a timestamp above';
     detailsDisplay.classList.remove('error');
@@ -45,13 +62,14 @@ function processInput() {
   }
 
   try {
+    // Parse & convert
     const parsed = parseInput(val);
     const converted = convertToLocal(parsed);
 
     timeDisplay.textContent = converted.time;
     detailsDisplay.textContent = `${converted.date} (${converted.zone})`;
     detailsDisplay.classList.remove('error');
-  } catch (err) {
+  } catch (err) { // Parsing error
     timeDisplay.textContent = '--:--';
     detailsDisplay.textContent = err.message;
     detailsDisplay.classList.add('error');
@@ -62,7 +80,6 @@ function parseInput(inputStr) {
   // Regex matches: HH[:MM] [AM/PM] TIMEZONE
   const regex = /^\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s+([a-z]{2,5})\s*$/i;
   const match = inputStr.match(regex);
-
   if (!match) {
     throw new Error('Invalid format. Use e.g. "9:30 pm PT" or "14:55 CST"');
   }
@@ -73,18 +90,18 @@ function parseInput(inputStr) {
   ampm = ampm ? ampm.toLowerCase() : null;
   tzCode = tzCode.toLowerCase();
 
-  if (hrs > 24 || mins > 59) {
+  if (hrs > 24 || mins > 59) { // Invalid numbers
     throw new Error('Invalid time values');
   }
 
-  if (ampm) {
+  if (ampm) { // 12-hour values
     if (hrs > 12 || hrs < 1) throw new Error('Hour must be 1-12 when using AM/PM');
     if (ampm === 'pm' && hrs < 12) hrs += 12;
     if (ampm === 'am' && hrs === 12) hrs = 0;
   }
 
   const ianaZone = TIMEZONE_MAP[tzCode];
-  if (!ianaZone) {
+  if (!ianaZone) { // Invalid timezone code
     throw new Error(`Unrecognized timezone abbreviation "${tzCode.toUpperCase()}"`);
   }
 

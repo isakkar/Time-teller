@@ -5,6 +5,8 @@
   --text-muted: #6b7280;
   --border-color: #d1d5db;
   --focus-ring: #3b82f6;
+  --button-bg: #e5e7eb;
+  --button-hover: #d1d5db;
   --error-color: #dc2626;
 }
 
@@ -59,8 +61,13 @@ label {
   color: var(--text-main);
 }
 
+.input-with-button {
+  display: flex;
+  gap: 0.5rem;
+}
+
 input[type="text"] {
-  width: 100%;
+  flex: 1;
   padding: 0.75rem 1rem;
   font-size: 1rem;
   border: 1px solid var(--border-color);
@@ -72,6 +79,26 @@ input[type="text"] {
 input[type="text"]:focus {
   border-color: var(--focus-ring);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+#paste-btn {
+  padding: 0 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-main);
+  background-color: var(--button-bg);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+#paste-btn:hover {
+  background-color: var(--button-hover);
+}
+
+#paste-btn:active {
+  background-color: var(--border-color);
 }
 
 .result-container {
