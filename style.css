@@ -131,3 +131,120 @@ input[type="text"]:focus {
 .details-text.error {
   color: var(--error-color);
 }
+
+/* Header Layout */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 6px;
+  transition: color 0.15s, background-color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-btn:hover {
+  color: var(--text-main);
+  background-color: var(--button-bg);
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+
+.modal.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-content {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(0);
+  transition: transform 0.2s;
+}
+
+.modal.hidden .modal-content {
+  transform: translateY(10px);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h2 {
+  font-size: 1.25rem;
+}
+
+#close-modal-btn {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  outline: none;
+  background-color: #fff;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+select:focus {
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+#timezone-search {
+  margin-bottom: 0.5rem;
+}
+
+select[size] {
+  height: 180px;
+  padding: 0.25rem;
+  background-color: var(--bg-color);
+}
+
+select[size] option {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 2px;
+  transition: background-color 0.1s;
+}
+
+select[size] option:hover {
+  background-color: #e5e7eb;
+}
+
+select[size] option:checked {
+  background-color: var(--focus-ring);
+  color: #ffffff;
+}

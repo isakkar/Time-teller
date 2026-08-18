@@ -32,6 +32,13 @@ const inputEl = document.getElementById('time-input');
 const pasteBtn = document.getElementById('paste-btn');
 const timeDisplay = document.getElementById('converted-time');
 const detailsDisplay = document.getElementById('converted-details');
+const settingsBtn = document.getElementById('settings-btn');
+const modal = document.getElementById('settings-modal');
+const closeBtn = document.getElementById('close-modal-btn');
+const timezoneSelect = document.getElementById('timezone-select');
+const timezoneSearch = document.getElementById('timezone-search');
+
+let targetZone = localStorage.getItem('targetZone') || 'system';
 
 inputEl.addEventListener('input', processInput);
 
@@ -49,6 +56,60 @@ pasteBtn.addEventListener('click', async () => {
     detailsDisplay.classList.add('error');
     console.error('Failed to read clipboard: ', err);
   }
+});
+
+// Initialize Searchable Timezone List
+const allZones = Intl.supportedValuesOf('timeZone');
+
+function renderTimezones(filterText = '') {
+  timezoneSelect.innerHTML = ''; // Clear current options
+  const lowerFilter = filterText.toLowerCase();
+
+  // Add the Automatic option if it matches the search text
+  if ('automatic (system default)'.includes(lowerFilter)) {
+    const systemOpt = document.createElement('option');
+    systemOpt.value = 'system';
+    systemOpt.textContent = 'Automatic (System Default)';
+    timezoneSelect.appendChild(systemOpt);
+  }
+
+  // Add matching timezones
+  allZones.forEach(zone => {
+    const label = zone.replace(/_/g, ' ');
+    if (label.toLowerCase().includes(lowerFilter)) {
+      const opt = document.createElement('option');
+      opt.value = zone;
+      opt.textContent = label;
+      timezoneSelect.appendChild(opt);
+    }
+  });
+
+  // Highlight current selection if it's visible in the filtered list
+  if (Array.from(timezoneSelect.options).some(opt => opt.value === targetZone)) {
+    timezoneSelect.value = targetZone;
+  }
+}
+
+// Initial render
+renderTimezones();
+
+// Re-render list whenever the user types
+timezoneSearch.addEventListener('input', (e) => {
+  renderTimezones(e.target.value);
+});
+
+// Settings Modal Events
+settingsBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) modal.classList.add('hidden');
+});
+
+// Update target timezone
+timezoneSelect.addEventListener('change', (e) => {
+  targetZone = e.target.value;
+  localStorage.setItem('targetZone', targetZone);
+  processInput(); // Recalculate immediately if there's text
 });
 
 function processInput() {
@@ -128,12 +189,12 @@ function convertToLocal({ hrs, mins, ianaZone }) {
     throw new Error('Could not parse target date/time');
   }
 
-  // Convert to browser's local timezone
-  const localDt = targetDt.toLocal();
+  // Convert to user-selected zone (or system local)
+  const outputDt = targetDt.setZone(targetZone);
 
   return {
-    time: localDt.toFormat('h:mm a'),
-    date: localDt.toFormat('EEE, MMM d, yyyy'),
-    zone: localDt.zoneName
+    time: outputDt.toFormat('h:mm a'),
+    date: outputDt.toFormat('EEE, MMM d, yyyy'),
+    zone: outputDt.zoneName
   };
 }
