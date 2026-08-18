@@ -51,6 +51,20 @@
         <button id="close-modal-btn" class="icon-btn">&times;</button>
       </div>
       <div class="input-group">
+        <label>Theme</label>
+        <div class="toggle-group" id="theme-toggle">
+          <button class="toggle-btn" data-value="light">☀️ Light</button>
+          <button class="toggle-btn" data-value="dark">🌙 Dark</button>
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Time Format</label>
+        <div class="toggle-group" id="format-toggle">
+          <button class="toggle-btn" data-value="12">12-hour</button>
+          <button class="toggle-btn" data-value="24">24-hour</button>
+        </div>
+      </div>
+      <div class="input-group">
         <label for="timezone-search">Target Timezone</label>
         <input type="text" id="timezone-search" placeholder="Search region or city..." autocomplete="off">
         <select id="timezone-select" size="6">

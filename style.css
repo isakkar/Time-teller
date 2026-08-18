@@ -248,3 +248,53 @@ select[size] option:checked {
   background-color: var(--focus-ring);
   color: #ffffff;
 }
+
+/* Dark Mode Theme Variables */
+[data-theme="dark"] {
+  --bg-color: #111827;
+  --card-bg: #1f2937;
+  --text-main: #f9fafb;
+  --text-muted: #9ca3af;
+  --border-color: #374151;
+  --button-bg: #374151;
+  --button-hover: #4b5563;
+}
+
+/* Ensure inputs look good in dark mode */
+[data-theme="dark"] input,
+[data-theme="dark"] select {
+  background-color: var(--card-bg);
+  color: var(--text-main);
+}
+
+[data-theme="dark"] select[size] option:hover {
+  background-color: var(--button-bg);
+}
+
+/* Toggle Switch Styles */
+.toggle-group {
+  display: flex;
+  background-color: var(--button-bg);
+  border-radius: 8px;
+  padding: 0.25rem;
+  gap: 0.25rem;
+}
+
+.toggle-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.toggle-btn.active {
+  background-color: var(--card-bg);
+  color: var(--text-main);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

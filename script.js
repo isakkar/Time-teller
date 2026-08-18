@@ -37,6 +37,12 @@ const modal = document.getElementById('settings-modal');
 const closeBtn = document.getElementById('close-modal-btn');
 const timezoneSelect = document.getElementById('timezone-select');
 const timezoneSearch = document.getElementById('timezone-search');
+// New Toggle State Variables
+let isDarkMode = localStorage.getItem('isDarkMode') === 'true';
+// Default to 24-hour if nothing is set
+let is24Hour = localStorage.getItem('is24Hour') !== 'false'; 
+const themeToggleBtns = document.querySelectorAll('#theme-toggle .toggle-btn');
+const formatToggleBtns = document.querySelectorAll('#format-toggle .toggle-btn');
 
 let targetZone = localStorage.getItem('targetZone') || 'system';
 
@@ -110,6 +116,52 @@ timezoneSelect.addEventListener('change', (e) => {
   targetZone = e.target.value;
   localStorage.setItem('targetZone', targetZone);
   processInput(); // Recalculate immediately if there's text
+});
+
+// --- Theme & Format Initialization ---
+
+// Apply initial theme
+if (isDarkMode) document.documentElement.setAttribute('data-theme', 'dark');
+
+// Helper to update active toggle button UI
+function updateToggleUI(btns, activeValue) {
+  btns.forEach(btn => {
+    if (btn.dataset.value === activeValue) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+}
+
+// Set initial UI states
+updateToggleUI(themeToggleBtns, isDarkMode ? 'dark' : 'light');
+updateToggleUI(formatToggleBtns, is24Hour ? '24' : '12');
+
+// Theme Toggle Click Handler
+document.getElementById('theme-toggle').addEventListener('click', (e) => {
+  if (e.target.classList.contains('toggle-btn')) {
+    const val = e.target.dataset.value;
+    isDarkMode = (val === 'dark');
+    localStorage.setItem('isDarkMode', isDarkMode);
+    
+    if (isDarkMode) document.documentElement.setAttribute('data-theme', 'dark');
+    else document.documentElement.removeAttribute('data-theme');
+    
+    updateToggleUI(themeToggleBtns, val);
+  }
+});
+
+// Format Toggle Click Handler
+document.getElementById('format-toggle').addEventListener('click', (e) => {
+  if (e.target.classList.contains('toggle-btn')) {
+    const val = e.target.dataset.value;
+    is24Hour = (val === '24');
+    localStorage.setItem('is24Hour', is24Hour);
+    
+    updateToggleUI(formatToggleBtns, val);
+    processInput(); // Recalculate time display immediately
+  }
 });
 
 function processInput() {
@@ -192,8 +244,9 @@ function convertToLocal({ hrs, mins, ianaZone }) {
   // Convert to user-selected zone (or system local)
   const outputDt = targetDt.setZone(targetZone);
 
+  const timeFormat = is24Hour ? 'H:mm' : 'h:mm a';
   return {
-    time: outputDt.toFormat('h:mm a'),
+    time: outputDt.toFormat(timeFormat),
     date: outputDt.toFormat('EEE, MMM d, yyyy'),
     zone: outputDt.zoneName
   };
